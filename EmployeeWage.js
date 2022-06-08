@@ -14,6 +14,7 @@ const MAX_TOTAL_WORKING_DAYS=20;
 let Employee_Work_Time=0;
 let Employee_Work_Days=0;
 const prompts=require("prompt-sync")();
+let Wage_Array=new Array();
 
 //Checking employee is present or absent
 //Present=1    Absent=0
@@ -60,10 +61,19 @@ function GetWageforMultipleDays(){
 
 //Function Calculate Wage for a month
 function GetWageforMonth(){
-    while(Employee_Work_Time<=MAX_TOTAL_WORKING_HOURS&&Employee_Work_Days<=MAX_TOTAL_WORKING_DAYS){
+    while(Employee_Work_Time<=MAX_TOTAL_WORKING_HOURS&&Employee_Work_Days<MAX_TOTAL_WORKING_DAYS){
         Employee_Work_Time=Employee_Work_Time+GetWorkignHours();
+        let EmployeeDailyWage=Employee_Work_Time*WAGE_PER_HRs;
+        Wage_Array.push(EmployeeDailyWage);
         Employee_Work_Days++;
     }
     let Employee_Wages=Employee_Work_Time*WAGE_PER_HRs;
     console.log("Employee Wage is : "+Employee_Wages);
+    Wage_Array.push(Employee_Wages);
+
+    for(let i=1;i<Wage_Array.length;i++){
+        console.log(i+" Day Wage is :"+Wage_Array[i-1]);
+    }
+
+    console.log("\nTotal 20 Days Wage is : "+Wage_Array[Wage_Array.length-1]);
 }
