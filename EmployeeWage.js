@@ -13,8 +13,12 @@ const MAX_TOTAL_WORKING_HOURS=160;
 const MAX_TOTAL_WORKING_DAYS=20;
 let Employee_Work_Time=0;
 let Employee_Work_Days=0;
+let DailyWage=0;
+let sum=0;
+let total_work_hr=0;
 const prompts=require("prompt-sync")();
-let Wage_Array=new Array();
+let DailyWageArray=new Array();
+let dailywageArray=new Array();
 
 //Checking employee is present or absent
 //Present=1    Absent=0
@@ -25,20 +29,23 @@ if(Attendance==1){
     console.log("-----Wage for Multiple Days-----");
     GetWageforMultipleDays();
     console.log("\n-----Wage for a Month-----");
-    GetWageforMonth();   
+    GetWageforMonth();  
     }else{
     console.log("Employee is Absent");
 }
 
 //Calculate Working Hours
 function GetWorkignHours(){
-    let Attendance_Time=Math.floor(Math.random()*10)%2;
+    let Attendance_Time=Math.floor(Math.random()*10)%3;
     //Part_Time=0 Full_Time=1
     switch(Attendance_Time){
         case 0:
-            return PART_TIME_HRs;
+            return 0;
             break;
         case 1:
+            return PART_TIME_HRs;
+            break;
+        case 2:
             return FULL_TIME_HRs;
             break;
         default:
@@ -64,16 +71,66 @@ function GetWageforMonth(){
     while(Employee_Work_Time<=MAX_TOTAL_WORKING_HOURS&&Employee_Work_Days<MAX_TOTAL_WORKING_DAYS){
         Employee_Work_Time=Employee_Work_Time+GetWorkignHours();
         let EmployeeDailyWage=Employee_Work_Time*WAGE_PER_HRs;
-        Wage_Array.push(EmployeeDailyWage);
+        DailyWageArray.push(EmployeeDailyWage);
         Employee_Work_Days++;
     }
     let Employee_Wages=Employee_Work_Time*WAGE_PER_HRs;
     console.log("Employee Wage is : "+Employee_Wages);
-    Wage_Array.push(Employee_Wages);
+    DailyWageArray.push(Employee_Wages);
 
-    for(let i=1;i<Wage_Array.length;i++){
-        console.log(i+" Day Wage is :"+Wage_Array[i-1]);
+    for(let i=1;i<DailyWageArray.length;i++){
+        console.log(i+" Day Wage is :"+DailyWageArray[i-1]);
     }
 
-    console.log("\nTotal 20 Days Wage is : "+Wage_Array[Wage_Array.length-1]);
+    console.log("\nTotal 20 Days Wage is : "+DailyWageArray[Wage_Array.length-1]);
 }
+
+//---------------UC_7 Using ForEach And Reduce Method----------------
+console.log("------Using ForEach Function------");
+let Total_Working_Days=prompts("Enter Total Number of Working Days : ");
+for(let i=0;i<Total_Working_Days;i++){
+    let Work_hr=GetWorkignHours();
+    total_work_hr=total_work_hr+Work_hr;
+    DailyWage=WAGE_PER_HRs*Work_hr;
+    dailywageArray.push(DailyWage);
+}
+
+//7A - Calculate total Wage Using ForEach or Reduce
+console.log(dailywageArray);
+function Addition(DailyWage){
+    sum=sum+DailyWage;
+}
+dailywageArray.forEach(Addition)
+console.log("\nTotal Working Days : "+Total_Working_Days+"\nTotal Working Hours : "+total_work_hr+"\nTotal Wage is : "+sum);
+day=0;
+
+//7B - Show Day And DailyWage Using Array Map Helper
+function mapDayWithDailyWage(DailyWage){
+    day++;
+    return day+"="+DailyWage;
+}
+mapDayWithWage = dailywageArray.map(mapDayWithDailyWage);
+console.log("\n------------Daily wage Using Map Function----  \n"+mapDayWithWage);
+console.log("Total working days: "+Total_Working_Days+"\nTotal working hrs: "+ total_work_hr+"\nTotal wage: "+sum);
+
+//7C - Show full time worked days of earned 160 wage
+let empWithFullTime = mapDayWithWage.filter(day => day.includes("160"));
+console.log("Emp with full time wage on days: "+empWithFullTime);
+
+//7D - Find First Occurance of Full time worked day using finf function
+let findfulltimeworkday=mapDayWithWage.find(day => day.includes("160"))
+console.log("\nFirst time FullTime wage was earned on: "+findfulltimeworkday);
+
+//7E - Check if there is all element hold full time work hours
+console.log("Check if all elements have full time wage: "+mapDayWithWage.every(wage => wage.includes("160")));
+
+//7F - Check if there is any part time Wage
+console.log("Check if there is any part time wage: "+mapDayWithWage.some(wage => wage.includes("80")));
+
+//7G - Total Number Days Employee Worked 
+function TotalWorkingDays(WorkingDays, DailyWage) {
+    if (DailyWage > 0) 
+        return WorkingDays + 1;
+    return WorkingDays;
+}
+console.log("Total Number Working Days : " + dailywageArray.reduce(TotalWorkingDays, 0));
