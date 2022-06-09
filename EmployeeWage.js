@@ -16,6 +16,9 @@ let Employee_Work_Days=0;
 let DailyWage=0;
 let sum=0;
 let total_work_hr=0;
+let Total_Working_Days=0;
+let Employee_Work_Day=1;
+let DailyWageMap=new Map();
 const prompts=require("prompt-sync")();
 let DailyWageArray=new Array();
 let dailywageArray=new Array();
@@ -81,14 +84,13 @@ function GetWageforMonth(){
     for(let i=1;i<DailyWageArray.length;i++){
         console.log(i+" Day Wage is :"+DailyWageArray[i-1]);
     }
-
-    console.log("\nTotal 20 Days Wage is : "+DailyWageArray[Wage_Array.length-1]);
+    console.log("\nTotal 20 Days Wage is : "+DailyWageArray[DailyWageArray.length-1]);
+    console.log("####"+DailyWageMap);
 }
 
 //---------------UC_7 Using ForEach And Reduce Method----------------
 console.log("------Using ForEach Function------");
-let Total_Working_Days=prompts("Enter Total Number of Working Days : ");
-for(let i=0;i<Total_Working_Days;i++){
+for(let i=0;i<MAX_TOTAL_WORKING_DAYS;i++){
     let Work_hr=GetWorkignHours();
     total_work_hr=total_work_hr+Work_hr;
     DailyWage=WAGE_PER_HRs*Work_hr;
@@ -96,9 +98,11 @@ for(let i=0;i<Total_Working_Days;i++){
 }
 
 //7A - Calculate total Wage Using ForEach or Reduce
-console.log(dailywageArray);
 function Addition(DailyWage){
     sum=sum+DailyWage;
+    if(DailyWage>0){
+        Total_Working_Days=Total_Working_Days+1;
+    }
 }
 dailywageArray.forEach(Addition)
 console.log("\nTotal Working Days : "+Total_Working_Days+"\nTotal Working Hours : "+total_work_hr+"\nTotal Wage is : "+sum);
@@ -133,4 +137,19 @@ function TotalWorkingDays(WorkingDays, DailyWage) {
         return WorkingDays + 1;
     return WorkingDays;
 }
-console.log("Total Number Working Days : " + dailywageArray.reduce(TotalWorkingDays, 0));
+let EmployeeWorkingDays=dailywageArray.reduce(TotalWorkingDays, 0)
+console.log("Total Number Working Days : " + EmployeeWorkingDays);
+
+//UC8 - Store Day And DailyWage along with
+while(Employee_Work_Time<=MAX_TOTAL_WORKING_HOURS&&Employee_Work_Day<MAX_TOTAL_WORKING_DAYS){
+    let EmpWorkHr=GetWorkignHours();
+    let dailywage=EmpWorkHr*WAGE_PER_HRs;
+    DailyWageMap.set(Employee_Work_Day,dailywage);
+    Employee_Work_Day++;
+}
+function dailywage(Sum,DailyWage){
+    return Sum+DailyWage;
+}
+console.log(DailyWageMap);
+let EmployeeDailyWage=Array.from(DailyWageMap.values()).reduce(dailywage, 0);
+console.log(EmployeeDailyWage);
