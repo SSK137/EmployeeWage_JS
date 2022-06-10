@@ -16,6 +16,7 @@ let TotalWorksDays=0;
 let DailyWage=0;
 let DailyHours=0;
 let DailyWageMap=new Map();
+let DailyHoursMap=new Map();
 let DailyWageArray=new Array();
 
 //Checking employee is present or absent
@@ -55,6 +56,7 @@ while(TotalWorkingHours<=MAX_TOTAL_WORKING_HOURS&&TotalWorkDays<MAX_TOTAL_WORKIN
     DailyWage=CalculateDailyWage();
     DailyWageArray.push(DailyWage);
     DailyWageMap.set(TotalWorkDays,DailyWage);
+    DailyHoursMap.set(TotalWorkDays,DailyHours);
 }
 TotalWorkWage=TotalWorkingHours*WAGE_PER_HRs;
 console.log(DailyWageArray);
@@ -114,3 +116,23 @@ console.log("Total Number Working Days : " +EmployeeWorkingDays);
 //UC8 - Store Day And DailyWage along with
 console.log(DailyWageMap);
 console.log("Employee Wage Map totalWage : " + Array.from(DailyWageMap.values()).reduce(TotalWorkWages, 0));
+
+//UC9 - Calc total Wage and total hours worked
+let totalHours = Array.from(DailyWageArray.values()).reduce(totalDaysWorked, 0);
+let totalSalary = DailyWageArray
+        .filter(DailyWage => DailyWage > 0)
+        .reduce(TotalWorkWages, 0);
+console.log("Emp Wage with Arrow. : " + "Total Hours: " + totalHours + ", Total Wages: " + totalSalary);
+
+//UC 9-b. Show the full workings days, part working days and no working days
+let nonWorkingDays = new Array();
+let partWorkingDays = new Array();
+let fullWorkingDays = new Array();
+DailyHoursMap.forEach((value, key) => {
+        if (value == 8) fullWorkingDays.push(key);
+        else if (value == 4) partWorkingDays.push(key);
+        else nonWorkingDays.push(key);
+});
+console.log("Full Working Days : " + fullWorkingDays);
+console.log("Part Working Days : " + partWorkingDays);
+console.log("Non Working Days : " + nonWorkingDays);
