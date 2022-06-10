@@ -54,18 +54,20 @@ while(TotalWorkingHours<=MAX_TOTAL_WORKING_HOURS&&TotalWorkDays<MAX_TOTAL_WORKIN
     TotalWorkDays++;
     DailyHours=GetWorkignHours();
     TotalWorkingHours=TotalWorkingHours+DailyHours;
-    DailyWage=CalculateDailyWage();
+    DailyWage=CalculateDailyWage(DailyHours);
     DailyWageArray.push(DailyWage);
     DailyWageMap.set(TotalWorkDays,DailyWage);
     DailyHoursMap.set(TotalWorkDays,DailyHours);
 
     DailyHrsAndWageArray.push(
         {
-            daynum:TotalWorkDays,
-            dayhrs:DailyHours,
-            dailywage:CalculateDailyWage(DailyHours),
-        }
-    );
+            daynum: TotalWorkDays,
+            dayhrs: DailyHours,
+            dailywage: DailyWage,
+            toString() {
+                return '\nDay '+this.daynum+',Hours '+this.dayhrs+',Wage '+this.dailywage;
+            },
+        });
 }
 TotalWorkWage=TotalWorkingHours*WAGE_PER_HRs;
 console.log(DailyWageArray);
@@ -148,4 +150,33 @@ console.log("Non Working Days : " + nonWorkingDays);
 
 //UC 10 - Ability to store the Day,Hours Worked and Wage Earned in a single object.
 console.log("\n===================UC10====================");
-console.log(DailyHrsAndWageArray);
+console.log(" "+DailyHrsAndWageArray);
+
+//UC -11A Calculate total wage and total hours worked 
+console.log("======================UC11-A=======================");
+let totalwages=DailyHrsAndWageArray.filter(dailyhousrAndwage => dailyhousrAndwage.dailywage>0)
+                                .reduce((DailyWage,dailyhousrAndwage) => DailyWage+=dailyhousrAndwage.dailywage,0);
+console.log("Total Wage : "+totalwages);
+let totalHour=DailyHrsAndWageArray.filter(dailyhousrAndwage => dailyhousrAndwage.dayhrs>0)
+                                .reduce((dayhrs,dailyhousrAndwage) => dayhrs+=dailyhousrAndwage.dayhrs,0);
+console.log("Total Hours : "+totalHour);
+
+//UC -11B Show the full workings days using foreach
+console.log("======================UC11-B=======================");
+process.stdout.write("");
+DailyHrsAndWageArray.filter(dailyhousrAndwage=> dailyhousrAndwage.dayhrs == 8)
+            .forEach(dailyhousrAndwage=>process.stdout.write(dailyhousrAndwage.toString()));
+
+//Uc -11C Show Part working days using Map by reducing to String Array
+console.log("\n======================UC11-C=======================");
+let partWorkingDayStrArr = DailyHrsAndWageArray
+                           .filter(dailyHrsAndWages => dailyHrsAndWages.dayhrs == 4)
+                           .map(dailyHrsAndWages => dailyHrsAndWages.toString());
+console.log("\nPartWorkingDayStrings : " + partWorkingDayStrArr);
+
+//UC 11D No working days only using Map function
+console.log("\n======================UC11-C=======================");
+let nonWorkingDayNums = DailyHrsAndWageArray
+                        .filter(dailyHrsAndWage => dailyHrsAndWage.dayhrs == 0)
+                        .map(dailyHrsAndWage => dailyHrsAndWage.daynum);
+console.log("\nNonWorkingDayNums : " + nonWorkingDayNums);
