@@ -18,6 +18,7 @@ let DailyHours=0;
 let DailyWageMap=new Map();
 let DailyHoursMap=new Map();
 let DailyWageArray=new Array();
+let DailyHrsAndWageArray=new Array();
 
 //Checking employee is present or absent
 //Present=1    Absent=0
@@ -45,8 +46,8 @@ function GetWorkignHours(){
             break;
     }
 }
-function CalculateDailyWage(){
-    return WAGE_PER_HRs*GetWorkignHours();
+function CalculateDailyWage(DailyHours){
+    return WAGE_PER_HRs*DailyHours;
 }
 //Function Calculate Wage for a month
 while(TotalWorkingHours<=MAX_TOTAL_WORKING_HOURS&&TotalWorkDays<MAX_TOTAL_WORKING_DAYS){
@@ -57,6 +58,14 @@ while(TotalWorkingHours<=MAX_TOTAL_WORKING_HOURS&&TotalWorkDays<MAX_TOTAL_WORKIN
     DailyWageArray.push(DailyWage);
     DailyWageMap.set(TotalWorkDays,DailyWage);
     DailyHoursMap.set(TotalWorkDays,DailyHours);
+
+    DailyHrsAndWageArray.push(
+        {
+            daynum:TotalWorkDays,
+            dayhrs:DailyHours,
+            dailywage:CalculateDailyWage(DailyHours),
+        }
+    );
 }
 TotalWorkWage=TotalWorkingHours*WAGE_PER_HRs;
 console.log(DailyWageArray);
@@ -136,3 +145,7 @@ DailyHoursMap.forEach((value, key) => {
 console.log("Full Working Days : " + fullWorkingDays);
 console.log("Part Working Days : " + partWorkingDays);
 console.log("Non Working Days : " + nonWorkingDays);
+
+//UC 10 - Ability to store the Day,Hours Worked and Wage Earned in a single object.
+console.log("\n===================UC10====================");
+console.log(DailyHrsAndWageArray);
